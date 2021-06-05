@@ -1,0 +1,5 @@
+[nodes]
+glusternode1
+glusternode2
+[client]
+glusterman
