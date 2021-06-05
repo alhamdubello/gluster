@@ -1,0 +1,7 @@
+---
+- name: "The sets up gluster"
+  hosts: nodes
+  become: true
+  pre_tasks:
+  tasks:
+
