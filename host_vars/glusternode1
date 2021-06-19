@@ -1,0 +1,14 @@
+---
+  #Defines a list of disk to be prepared for XFS formatting.
+  disks:
+    - device_disk: /dev/sdb 
+      device_disk_number: 1
+      vol_group_name: vg_gluster_brick
+      pvs: /dev/sdb
+      lv_vol:
+        - name: my_sql
+          size: 1G
+          mount_dir: /mnt/mysql
+        - name: web_srv
+          size: 1G
+          mount_dir: /mnt/www

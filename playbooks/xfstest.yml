@@ -1,0 +1,5 @@
+---
+- hosts: glusternode1
+  become: true
+  roles:
+    - xfs_create

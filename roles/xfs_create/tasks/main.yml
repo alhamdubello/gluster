@@ -1,0 +1,57 @@
+---
+# tasks file for xfs_create
+- name: "disk label and partitioning"
+  parted:
+    device: "{{ item.device_disk }}"
+    number: "{{ item.device_disk_number }}"
+    flags: [ lvm ]
+    state: present
+  with_items:
+    - "{{ disks }}"
+
+- name: "volume group creation"
+  lvg:
+    vg: "{{ item.vol_group_name }}"
+    pvs: "{{ item.pvs }}{{ item.device_disk_number }}"
+    state: present
+  with_items:
+    - "{{ disks }}"
+
+- name: "create lvm"
+  lvol:
+    vg: "{{ item.0.vol_group_name }}"
+    lv: "{{ item.1.name }}"
+    size: "{{ item.1.size }}"
+    state: present
+  with_subelements:
+    - "{{ disks }}"
+    - lv_vol
+
+- name: "performing XFS filesystem on {{ item.1.name }}"
+  filesystem:
+    fstype: xfs
+    dev: /dev/{{ item.0.vol_group_name }}/{{ item.1.name }}
+  with_subelements:
+    - "{{ disks }}"
+    - lv_vol
+
+- name: "create mount directory for {{ item.1.mount_dir }}"
+  file:
+    path: "{{ item.1.mount_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  with_subelements:
+    - "{{ disks }}"
+    - lv_vol
+
+- name: "mount the lvm /dev/{{ item.0.vol_group_name }}/{{ item.1.name }} in /etc/fstab"
+  mount:
+    path: "{{ item.1.mount_dir }}"
+    src:  /dev/{{ item.0.vol_group_name }}/{{ item.1.name }}
+    fstype: xfs
+    state: mounted
+  with_subelements:
+    - "{{ disks }}"
+    - lv_vol
