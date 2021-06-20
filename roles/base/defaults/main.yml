@@ -1,0 +1,10 @@
+---
+# defaults file for base
+#a list of admin groups
+admin_group:
+  - group: glusteradmin
+    gid: 10099
+users_admin:
+  - name: aub
+    uid: 10078
+    shell: /bin/bash

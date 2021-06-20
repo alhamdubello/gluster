@@ -1,0 +1,42 @@
+---
+# tasks file for base
+- name: "creating sysadmin group."
+  group:
+    name: {{ item.group }}
+    gid: {{ item.gid }}
+    state: present
+  when: admin_group is defined
+  with_items:
+    - "{{ admin_group }}"
+
+- name: "setup base systemadmins group and users."
+  user:
+    name: "{{ item.name }}"
+    uid:  "{{ item.uid }}"
+    shell: "{{ item.shell }}"
+    groups: "{{ item.groups }}"
+    append: yes
+    state: present
+  when: user_admin is defined
+  with_items:
+    - "{{ users_admin }}"
+
+- name: "admin user should have sudo access no password."
+  lineinfile:
+    path: /etc/sudoers.d/{{ item.group }}
+    line: "%{{ item.group }}	ALL=(ALL)	NOPASSWD: ALL"
+    state: present
+  with_items:
+    - "{{ admin_group }}"
+
+- name: "ssh public keys should be copied for systemadmin users."
+
+- name: "install and configure ntp"
+
+- name: "install and configure syslog"
+
+- name: "install and configure cronie"
+
+- name: "install basic tools traceroute, dig, lsof, htop, iotop, monit."
+
+- name: "Install setup Zabbix-Agent."
